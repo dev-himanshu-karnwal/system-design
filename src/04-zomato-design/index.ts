@@ -29,15 +29,15 @@ async function main() {
 
   zomato.printUserCart(user);
 
-  // Create payment strategy
-  const paymentStrategy = new UpiPaymentStrategy("1234567890");
+  // User picks payment type and credential
+  const paymentType = "upi";
+  const credential = "1234567890";
 
   // User checks out the cart (Now/Immediate order)
-  const order: Order | null = zomato.checkoutNow(
-    user,
-    "Delivery",
-    paymentStrategy
-  );
+  const order: Order | null = zomato.checkoutNow(user, "Delivery", {
+    type: paymentType,
+    credential: credential,
+  });
 
   if (order) {
     // Process payment and notify if successful

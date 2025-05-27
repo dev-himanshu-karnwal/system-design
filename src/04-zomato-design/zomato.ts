@@ -5,6 +5,7 @@ import { RestaurantManager } from "./managers/RestaurantManager";
 import { OrderManager } from "./managers/OrderManager";
 import { PaymentStrategy } from "./strategies/PaymentStrategy";
 import { NowOrderFactory } from "./factories/NowOrderFactory";
+import { PaymentFactory } from "./factories/PaymentFactory";
 import { ScheduledOrderFactory } from "./factories/ScheduledOrderFactory";
 import { NotificationService } from "./services/NotificationService";
 
@@ -57,11 +58,22 @@ export class Zomato {
     }
   }
 
-  checkoutNow(user: User, orderType: string, paymentStrategy: PaymentStrategy) {
+  private createPaymentStrategy(
+    type: string,
+    credential: string
+  ): PaymentStrategy {
+    return PaymentFactory.createPaymentStrategy(type, credential);
+  }
+
+  checkoutNow(
+    user: User,
+    orderType: string,
+    paymentDetails: { type: string; credential: string }
+  ) {
     return this.checkout(
       user,
       orderType,
-      paymentStrategy,
+      paymentDetails,
       new NowOrderFactory()
     );
   }
@@ -69,21 +81,21 @@ export class Zomato {
   checkoutScheduled(
     user: User,
     orderType: string,
-    paymentStrategy: PaymentStrategy,
+    paymentDetails: { type: string; credential: string },
     scheduleTime: string
   ) {
     return this.checkout(
       user,
       orderType,
-      paymentStrategy,
+      paymentDetails,
       new ScheduledOrderFactory(scheduleTime)
     );
   }
 
-  checkout(
+  private checkout(
     user: User,
     orderType: string,
-    paymentStrategy: PaymentStrategy,
+    paymentDetails: { type: string; credential: string },
     orderFactory: any
   ) {
     if (user.cart.isEmpty()) return null;
@@ -92,6 +104,11 @@ export class Zomato {
     const orderedRestaurant = userCart.restaurant;
     const itemsOrdered = userCart.items;
     const totalCost = userCart.getTotalCost();
+
+    const paymentStrategy = this.createPaymentStrategy(
+      paymentDetails.type,
+      paymentDetails.credential
+    );
 
     const order = orderFactory.createOrder(
       user,
