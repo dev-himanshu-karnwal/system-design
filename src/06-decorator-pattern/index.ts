@@ -50,8 +50,6 @@ function main() {
   // Finally, add a StarPowerUp decoration.
   mario = new StarDecorator(mario);
   console.log(`After StarPowerUp: ${mario.getAbilities()}`);
-
-  return 0;
 }
 
 main();
