@@ -103,3 +103,5 @@ cart.addProduct(new Product("Laptop", 50000));
 cart.addProduct(new Product("Mouse", 1500));
 
 cart.calculateTotal(); // Logs: Applied 10% discount. Final total: ₹46,350
+
+export {};
