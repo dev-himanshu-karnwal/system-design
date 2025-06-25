@@ -59,3 +59,5 @@ docReader.unlockPDF("protected_document.pdf", "secret123");
 console.log("\n== Rashmi (Premium) unlocks PDF ==");
 docReader = new DocumentProxy(user2);
 docReader.unlockPDF("protected_document.pdf", "secret123");
+
+export {};
